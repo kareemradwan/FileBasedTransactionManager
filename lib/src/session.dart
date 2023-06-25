@@ -7,12 +7,18 @@ class Session {
   final String _root;
   final Map<String, String> _files = {};
   bool _isValid = true;
-  final String _sessionId = '${DateTime.now().microsecondsSinceEpoch}';
+  late String _sessionId;
 
   Directory get currentSessionFolder =>
-      Directory('${Directory.current.path}/$_root/${_sessionId}/files');
+      Directory('${Directory.current.path}/$_root/$_sessionId/files');
 
-  Session(this._root, {List<File>? files}) {
+  static Session byId(String root, String id) {
+    var session = Session(root, id: id);
+    return session;
+  }
+
+  Session(this._root, {String? id, List<File>? files}) {
+    _sessionId = id ?? "${DateTime.now().microsecondsSinceEpoch}";
     var isDirectoryExists = currentSessionFolder.existsSync();
     if (!isDirectoryExists) {
       currentSessionFolder.createSync(recursive: true);
@@ -57,19 +63,25 @@ class Session {
   void rollback() async {
     _checkIsValid();
 
-    print("Rollback");
-    for (var entry in _files.entries) {
-      var target = entry.key;
-      var source = "${currentSessionFolder.path}/${entry.value}";
+    print("Rollback Started");
 
-      try {
-        var x = File(source).copySync(target);
-      } catch (error, stack) {
-        print("error: ${error}");
+    try {
+      for (var entry in _files.entries) {
+        var target = entry.key;
+        var source = "${currentSessionFolder.path}/${entry.value}";
+
+        try {
+          var x = File(source).copySync(target);
+        } catch (error, stack) {
+          print("error: ${error}");
+        }
       }
+    } catch (error, stack) {
+      print("Rollback Error: ${error}");
+      print(stack);
+      throw error;
     }
 
-    // await currentSessionFolder.parent.delete(recursive: true);
     _isValid = false;
   }
 
@@ -94,6 +106,7 @@ class Session {
 
   void close() {
     currentSessionFolder.parent.deleteSync(recursive: true);
+    print("session has been closed");
   }
 
   void _saveInfoMetaData() {
@@ -102,8 +115,16 @@ DATE:     ${DateTime.now()}
 PROJECT:  ${Directory.current.name}
     """;
 
-    var file = File('$currentSessionFolder/metadata.txt');
+    var file = File('${currentSessionFolder.path}/metadata.txt');
     file.createSync();
     file.writeAsStringSync(metadata);
+  }
+
+  String getId() {
+    return _sessionId;
+  }
+
+  String getRoot() {
+    return _root;
   }
 }

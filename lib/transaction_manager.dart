@@ -71,4 +71,10 @@ class TransactionManager {
     lst.sort((i, d) => i.date.compareTo(d.title));
     return lst;
   }
+
+  Future<void> rollbackById(String sessionId) async {
+    var session = Session.byId(_rootFolder.path, sessionId);
+
+    rollback(session);
+  }
 }
