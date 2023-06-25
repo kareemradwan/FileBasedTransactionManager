@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_based_transaction_manager/src/util/file.dart';
+import 'package:file_based_transaction_manager/transaction_manager.dart';
 
 class Session {
   final String _root;
@@ -19,6 +20,8 @@ class Session {
     for (var element in (files ?? [])) {
       addFile(element);
     }
+
+    _saveInfoMetaData();
   }
 
   void addFile(File file) {
@@ -91,5 +94,16 @@ class Session {
 
   void close() {
     currentSessionFolder.parent.deleteSync(recursive: true);
+  }
+
+  void _saveInfoMetaData() {
+    var metadata = """
+DATE:     ${DateTime.now()}
+PROJECT:  ${Directory.current.name}
+    """;
+
+    var file = File('$currentSessionFolder/metadata.txt');
+    file.createSync();
+    file.writeAsStringSync(metadata);
   }
 }

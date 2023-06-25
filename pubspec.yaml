@@ -1,13 +1,11 @@
 name: file_based_transaction_manager
-description: A starting point for Dart libraries or applications.
-version: 1.0.0
-homepage: https://www.example.com
+description: Save a Copy from your files easily and rollback them any time.
+version: 0.0.1
+homepage: https://github.com/kareemradwan/FileBasedTransactionManager
 
 environment:
   sdk: '>=2.18.1 <3.0.0'
 
-# dependencies:
-#   path: ^1.8.0
 
 dev_dependencies:
   lints: ^2.0.0

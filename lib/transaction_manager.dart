@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_based_transaction_manager/src/session.dart';
+import 'package:file_based_transaction_manager/src/transaction_history.dart';
 
 extension FileExtention on FileSystemEntity {
   String get name {
@@ -43,5 +45,30 @@ class TransactionManager {
 
   close(Session session) {
     session.close();
+  }
+
+  Future<List<TransactionHistory>> history() async {
+    List<TransactionHistory> lst = [];
+
+    var transactions = _rootFolder.listSync();
+
+    for (var transaction in transactions.toList()) {
+      var lines = await File('${transaction.path}/metadata.txt')
+          .openRead()
+          .map(utf8.decode)
+          .transform(const LineSplitter())
+          .toList();
+
+      var date = "";
+      for (var value in lines) {
+        if (value.contains("DATE")) {
+          date = value.replaceAll("DATE:     ", "");
+        }
+      }
+      var transactionHistory = TransactionHistory(transaction.name, date);
+      lst.add(transactionHistory);
+    }
+    lst.sort((i, d) => i.date.compareTo(d.title));
+    return lst;
   }
 }

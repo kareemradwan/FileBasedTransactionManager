@@ -11,7 +11,7 @@ Close Sessions
 
 ## Getting started
 
-TODO: Save Copy from your files easily and rollback them any time.
+TODO: Save a Copy from your files easily and rollback them any time.
 start using the package.
 
 ## Usage
