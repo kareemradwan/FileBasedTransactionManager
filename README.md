@@ -1,5 +1,7 @@
 File Based Transaction Manager
 
+`PART OF GTC OPEN SOURCE INTIATIVE`
+
 ## Features
 
 Create Multiple Sessions
