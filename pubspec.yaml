@@ -1,6 +1,6 @@
 name: file_based_transaction_manager
 description: Save a Copy from your files easily and rollback them any time.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/kareemradwan/FileBasedTransactionManager
 
 environment:
