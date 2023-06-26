@@ -1,3 +1,7 @@
+## 0.0.4
+- Update README file
+
+
 ## 0.0.3
 
 - Implement Rollback by Session Id.
